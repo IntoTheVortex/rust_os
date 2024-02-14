@@ -10,7 +10,7 @@ static HELLO: &[u8] = b"Hello Rust OS!";
 #[no_mangle] //No name mangling for this function
 pub extern "C" fn _start() -> ! {
     // this func defines the entry point
-    let vga_buffer = 0xb800 as *mut u8;
+    let vga_buffer = 0xb8000 as *mut u8;
 
     for (i, &byte) in HELLO.iter().enumerate() {
         unsafe {
