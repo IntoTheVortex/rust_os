@@ -1,7 +1,12 @@
 // main.rs
-
+#![feature(prelude_2024)]
+// use core::prelude::rust_2024::derive;
 #![no_std]
 #![no_main]
+
+
+
+mod vga_buffer;
 
 use core::panic::PanicInfo;
 
@@ -18,6 +23,8 @@ pub extern "C" fn _start() -> ! {
             *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
         }
     }
+
+    vga_buffer::print_something();
 
     loop {}
 }
