@@ -1,7 +1,8 @@
 // vga_buffer.rs
 use core::prelude::rust_2024::derive;
 use core::cmp::Eq;
-//use core::fmt;
+use volatile::Volatile;
+use core::fmt;
 
 /// The color palette
 #[allow(dead_code)] // no warning for unused variants
@@ -52,7 +53,7 @@ const BUFFER_WIDTH: usize = 80;
 /// The text buffer
 #[repr(transparent)]
 struct Buffer {
-    chars: [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT],
+    chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
 /// Writer
@@ -75,10 +76,10 @@ impl Writer {
                 let col = self.column_position;
 
                 let color_code = self. color_code;
-                self.buffer.chars[row][col] = ScreenChar {
+                self.buffer.chars[row][col].write(ScreenChar {
                     ascii_character: byte,
                     color_code,
-                };
+                });
                 self.column_position += 1;
             }
         }
@@ -98,8 +99,16 @@ impl Writer {
     }
 }
 
+// is this where this should go?
+impl fmt::Write for Writer {
+    fn write_str(&mut self, s: str) -> fmt::Result {
+        self.write_string(s);
+        Ok(())
+    }
+}
 
 pub fn print_something() {
+    use core::fmt::Write;
     let mut writer = Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Yellow, Color::Black),
@@ -109,4 +118,5 @@ pub fn print_something() {
     writer.write_byte(b'H');
     writer.write_string("ello ");
     writer.write_string("Wuerld! ööö !")
+    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap(); // TODO test before newline impl
 }
