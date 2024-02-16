@@ -101,7 +101,7 @@ impl Writer {
     fn clear_row(&mut self, row: usize) {
         let blank = ScreenChar {
             ascii_character: b' ',
-            color_code = self.color_code,
+            color_code: self.color_code,
         };
         for col in 0..BUFFER_WIDTH {
             self.buffer.chars[row][col].write(blank);
@@ -122,7 +122,7 @@ impl Writer {
 
 // is this where this should go?
 impl fmt::Write for Writer {
-    fn write_str(&mut self, s: str) -> fmt::Result {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
         self.write_string(s);
         Ok(())
     }

@@ -10,7 +10,7 @@ mod vga_buffer;
 
 use core::panic::PanicInfo;
 
-static HELLO: &[u8] = b"Hello Rust OS!";
+//static HELLO: &[u8] = b"Hello Rust OS!";
 
 #[no_mangle] //No name mangling for this function
 pub extern "C" fn _start() -> ! {
