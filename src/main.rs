@@ -15,9 +15,7 @@ use core::panic::PanicInfo;
 #[no_mangle] //No name mangling for this function
 pub extern "C" fn _start() -> ! {
     // this func defines the entry point
-    use core::fmt::Write;
-    vga_buffer::WRITER.lock().write_str("Hello RUST").unwrap();
-    write!(vga_buffer::WRITER.lock(), ", some numbers: {} {}", 42, 1.337).unwrap();
+    println!("Hello Rust{}", "!");
 
     loop {}
 }
