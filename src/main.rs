@@ -16,6 +16,7 @@ use core::panic::PanicInfo;
 pub extern "C" fn _start() -> ! {
     // this func defines the entry point
     println!("Hello Rust{}", "!");
+    panic!("The Disco!");
 
     loop {}
 }
@@ -23,5 +24,6 @@ pub extern "C" fn _start() -> ! {
 /// This function is called on panic:
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
+    println!("{}", _info); //why does the msg follow the location? change?
     loop {}
 }
