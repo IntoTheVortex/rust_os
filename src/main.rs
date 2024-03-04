@@ -50,6 +50,7 @@ fn panic(info: &PanicInfo) -> ! {
 }
 
 //testing
+//test runner:
 #[cfg(test)]
 pub fn test_runner(tests: &[&dyn Testable]) {
     serial_println!("Running {} tests", tests.len());
@@ -59,12 +60,13 @@ pub fn test_runner(tests: &[&dyn Testable]) {
     exit_qemu(QemuExitCode::Success);
 }
 
+//test cases:
 #[test_case]
 fn trivial_assertion() {
-    //serial_print!("trivial assertion! ");
     assert_eq!(1, 1);
-    //serial_println!("[ok]");
 }
+
+
 
 // make test_runner print automatically
 pub trait Testable {
