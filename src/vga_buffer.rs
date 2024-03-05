@@ -1,5 +1,5 @@
 // vga_buffer.rs
-use core::prelude::rust_2024::derive;
+//use core::prelude::rust_2024::derive;
 use core::cmp::Eq;
 use volatile::Volatile;
 use core::fmt;

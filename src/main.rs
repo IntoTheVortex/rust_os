@@ -6,15 +6,16 @@
 
 //testing
 #![feature(custom_test_frameworks)]
-#![test_runner(crate::test_runner)]
+#![test_runner(rust_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 
 
 mod vga_buffer;
-mod serial; 
+//mod serial; 
 
 use core::panic::PanicInfo;
+//use rust_os::println;
 
 //static HELLO: &[u8] = b"Hello Rust OS!";
 
@@ -31,7 +32,7 @@ pub extern "C" fn _start() -> ! {
     loop {}
 }
 
-/// This function is called on panic:
+// This function is called on panic:
 #[cfg(not(test))] //run this if not test run
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -40,64 +41,15 @@ fn panic(_info: &PanicInfo) -> ! {
 }
 
 // our panic handler in test mode
+// do we still need this one? after the one in lib
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    serial_println!("[failed]\n");
-    serial_println!("Error: {}\n", info);
-    exit_qemu(QemuExitCode::Failed);
-    loop {}
-}
-
-//testing
-//test runner:
-#[cfg(test)]
-pub fn test_runner(tests: &[&dyn Testable]) {
-    serial_println!("Running {} tests", tests.len());
-    for test in tests {
-        test.run();
-    }
-    exit_qemu(QemuExitCode::Success);
+    rust_os::test_panic_handler(info)
 }
 
 //test cases:
 #[test_case]
 fn trivial_assertion() {
     assert_eq!(1, 1);
-}
-
-
-
-// make test_runner print automatically
-pub trait Testable {
-    fn run(&self) -> ();
-}
-
-impl<T> Testable for T
-where
-    T: Fn(),
-{
-    fn run(&self) {
-        serial_print!("{}...\t", core::any::type_name::<T>());
-        self();
-        serial_println!("[ok]");
-    }
-}
-
-
-// Exit Qemu:
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(u32)]
-pub enum QemuExitCode {
-    Success = 0x10,
-    Failed = 0x11,
-}
-
-pub fn exit_qemu(exit_code: QemuExitCode) {
-    use x86_64::instructions::port::Port;
-
-    unsafe {
-        let mut port = Port::new(0xf4);
-        port.write(exit_code as u32);
-    }
 }
