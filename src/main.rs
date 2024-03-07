@@ -4,6 +4,7 @@
 #![no_std]
 #![no_main]
 
+
 //testing
 #![feature(custom_test_frameworks)]
 #![test_runner(rust_os::test_runner)]
@@ -19,16 +20,33 @@ use core::panic::PanicInfo;
 
 //static HELLO: &[u8] = b"Hello Rust OS!";
 
+// this func defines the entry point
 #[no_mangle] //No name mangling for this function
 pub extern "C" fn _start() -> ! {
-    // this func defines the entry point
     println!("Hello, it is Rust{}", "!");
+
+    rust_os::init();
+    //x86_64::instructions::interrupts::int3();
+
+    /*
+    //trigger page fault
+    unsafe {
+        *(0xdeadbeef as *mut u8) = 42;
+    };
+    */
+
+    fn stack_overflow() {
+        stack_overflow(); //infinite recursion
+    }
+
+    stack_overflow(); //call it!
 
     #[cfg(test)]
     test_main();
 
     //panic!("The Disco!");
 
+    println!("It did not crash?!");
     loop {}
 }
 
