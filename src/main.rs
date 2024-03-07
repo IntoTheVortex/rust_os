@@ -20,16 +20,21 @@ use core::panic::PanicInfo;
 
 //static HELLO: &[u8] = b"Hello Rust OS!";
 
+// this func defines the entry point
 #[no_mangle] //No name mangling for this function
 pub extern "C" fn _start() -> ! {
-    // this func defines the entry point
     println!("Hello, it is Rust{}", "!");
+
+    rust_os::init();
+
+    x86_64::instructions::interrupts::int3();
 
     #[cfg(test)]
     test_main();
 
     //panic!("The Disco!");
 
+    println!("It did not crash?!");
     loop {}
 }
 

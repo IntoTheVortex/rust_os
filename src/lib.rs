@@ -12,6 +12,12 @@ pub mod interrupts;
 
 use core::panic::PanicInfo;
 
+// Centralized initialization routines
+pub fn init() {
+    interrupts::init_idt();
+}
+
+// A bunch of testing stuff *********************
 pub trait Testable {
     fn run(&self) -> ();
 }
