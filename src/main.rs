@@ -26,8 +26,20 @@ pub extern "C" fn _start() -> ! {
     println!("Hello, it is Rust{}", "!");
 
     rust_os::init();
+    //x86_64::instructions::interrupts::int3();
 
-    x86_64::instructions::interrupts::int3();
+    /*
+    //trigger page fault
+    unsafe {
+        *(0xdeadbeef as *mut u8) = 42;
+    };
+    */
+
+    fn stack_overflow() {
+        stack_overflow(); //infinite recursion
+    }
+
+    stack_overflow(); //call it!
 
     #[cfg(test)]
     test_main();
