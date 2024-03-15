@@ -35,12 +35,6 @@ pub extern "C" fn _start() -> ! {
     };
     */
 
-    fn stack_overflow() {
-        stack_overflow(); //infinite recursion
-    }
-
-    stack_overflow(); //call it!
-
     #[cfg(test)]
     test_main();
 
